@@ -1,22 +1,21 @@
 language: node_js
 services:
-- docker
+  - docker
 before_install:
-- openssl aes-256-cbc -K $encrypted_48fb3927a4e3_key -iv $encrypted_48fb3927a4e3_iv
--in llavehlc.enc -out llavehlc -d
-- eval "$(ssh-agent -s)"
-- chmod 600 ./llavehlc
-- echo -e "Host 51.210.103.111\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-- ssh-add ./llavehlc
-- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --pasword-stdin
-node_js:
--'14'
+  - openssl aes-256-cbc -K $encrypted_48fb3927a4e3_key -iv $encrypted_48fb3927a4e3_iv
+    -in llavehlc.enc -out llavehlc -d
+  - eval "$(ssh-agent -s)"
+  - chmod 600 ./llavehlc
+  - echo -e "Host 51.210.103.111\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+  - ssh-add ./llavehlc
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --pasword-stdin
+node_js: -'14'
 branches:
- only:
- - master
+  only:
+    - master
 cache:
   directories:
-  - node_modules
+    - node_modules
 deploy:
   provider: pages
   skip-cleanup: true
@@ -30,5 +29,10 @@ before_script:
   - "npm i"
 script:
   - "npm run test"
+  - docker build -t front
 after_success:
-  - "npm run deploy"
+  - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+  - docker tag front $DOCKER_USER/fornt:$TRAVIS_BUILD_NUMBER
+  - docker push $DOCKER_USER/front:$TRAVIS_BUILD_NUMBER
+  - docker tag front $DOCKER_USER/front:latest
+  - docker push $DOCKER_USER/front:latest
