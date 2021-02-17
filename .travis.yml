@@ -28,7 +28,7 @@ before_script:
   - "npm i -g gatsby"
   - "npm i"
 script:
-  - "npm run test"
+  - "npm test"
   - docker build -t front
 after_success:
   - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
