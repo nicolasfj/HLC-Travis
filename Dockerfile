@@ -6,6 +6,8 @@ COPY package.json .
 
 RUN npm install -g gatsby-cli
 
+RUN nvm install
+
 COPY gatsby-config.js .
 
 EXPOSE 9000
