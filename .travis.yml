@@ -8,7 +8,7 @@ before_install:
   - chmod 600 ./llavehlc
   - echo -e "Host 51.210.103.111\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - ssh-add ./llavehlc
-  - echo "$DOCKER_PASSWORD" | docker login --username "nicolasfj" --password-stdin
+  - echo "$DOCKER_PASSWORD" | docker login - "$DOCKER_USERNAME" --password-stdin
 node_js: 14
 branches:
   only:
